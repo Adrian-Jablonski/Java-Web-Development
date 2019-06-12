@@ -77,5 +77,20 @@ public class Main {
             res.redirect(("/ideas"));
             return null;
         });
+
+        post("/ideas/:slug/vote", (req, res) -> {
+            CourseIdea idea = dao.findBySlug(req.params("slug"));
+            idea.addVoter(req.attribute("username"));
+            res.redirect("/ideas");
+            return null;
+        });
+
+        get("/ideas/:slug", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            CourseIdea idea = dao.findBySlug(req.params("slug"));
+            model.put("voters", idea.getVoters());
+            return new ModelAndView(model, "idea-detail.hbs");
+
+        }, new HandlebarsTemplateEngine());
     }
 }
