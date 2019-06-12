@@ -5,7 +5,9 @@ import com.example.courses.model.CourseIdeaDAO;
 import com.example.courses.model.SimpleCourseIdeaDAO;
 import spark.ModelAndView;
 
+import static spark.Spark.before;
 import static spark.Spark.get;
+import static spark.Spark.halt;
 import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 import static spark.Spark.staticFiles;
@@ -27,9 +29,24 @@ public class Main {
 
         CourseIdeaDAO dao = new SimpleCourseIdeaDAO();
 
+        // Before filters and request attributes
+        before((req, res) -> {  // Not providing a path means this will run on all pages
+            if (req.cookie("username") != null) {
+                req.attribute("username", req.cookie("username"));
+            }
+        });
+
+        before("/ideas", (req, res) -> {
+            //TODO: send message about redirect
+           if (req.attribute("username") == null) {
+               res.redirect("/");
+               halt();
+           }
+        });
+
         get("/", (req, res) -> {
             Map<String, String> model = new HashMap<>();
-            model.put("username", req.cookie("username"));
+            model.put("username", req.attribute("username"));
 
             return new ModelAndView(model, "index.hbs");
         }, new HandlebarsTemplateEngine());     // Renders a handlebar index page
@@ -42,8 +59,9 @@ public class Main {
 
             model.put("username", username); // Gets the username typed into the form in the index page and assigns it a key of username which will be used to reference it in the sign-in.hbs file
 
-            return new ModelAndView(model, "sign-in.hbs");
-        }, new HandlebarsTemplateEngine());
+            res.redirect(("/"));
+            return null;
+        });
 
         get("/ideas", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -53,8 +71,7 @@ public class Main {
 
         post("/ideas", (req, res) -> {
             String title = req.queryParams("title");
-            //TODO: This username is tied to the cookie implementation
-            CourseIdea courseIdea = new CourseIdea(title, req.cookie("username"));
+            CourseIdea courseIdea = new CourseIdea(title, req.attribute("username"));
             dao.add(courseIdea);
 
             res.redirect(("/ideas"));
