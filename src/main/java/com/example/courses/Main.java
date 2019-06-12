@@ -44,5 +44,21 @@ public class Main {
 
             return new ModelAndView(model, "sign-in.hbs");
         }, new HandlebarsTemplateEngine());
+
+        get("/ideas", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("ideas", dao.findAll());
+            return new ModelAndView(model, "ideas.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/ideas", (req, res) -> {
+            String title = req.queryParams("title");
+            //TODO: This username is tied to the cookie implementation
+            CourseIdea courseIdea = new CourseIdea(title, req.cookie("username"));
+            dao.add(courseIdea);
+
+            res.redirect(("/ideas"));
+            return null;
+        });
     }
 }

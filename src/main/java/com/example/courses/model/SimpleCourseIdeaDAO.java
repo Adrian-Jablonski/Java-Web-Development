@@ -7,10 +7,6 @@ public class SimpleCourseIdeaDAO implements  CourseIdeaDAO{
     private List<CourseIdea> ideas;
 
     public SimpleCourseIdeaDAO() {
-
-    }
-
-    public SimpleCourseIdeaDAO(List<CourseIdea> ideas) {
         ideas = new ArrayList<>();
     }
 
