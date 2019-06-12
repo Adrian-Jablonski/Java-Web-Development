@@ -1,9 +1,14 @@
 package com.example.courses;
 
+import com.example.courses.model.CourseIdea;
+import com.example.courses.model.CourseIdeaDAO;
+import com.example.courses.model.SimpleCourseIdeaDAO;
 import spark.ModelAndView;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.staticFileLocation;
+import static spark.Spark.staticFiles;
 
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
@@ -17,6 +22,10 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         //get("/hello", (req, res) -> "Hello World"); // Find page on http://localhost:4567/hello
+
+        staticFileLocation("/public");  // tells server where to look for static files such as CSS files
+
+        CourseIdeaDAO dao = new SimpleCourseIdeaDAO();
 
         get("/", (req, res) -> {
             Map<String, String> model = new HashMap<>();
