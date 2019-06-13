@@ -2,10 +2,12 @@ package com.example.courses;
 
 import com.example.courses.model.CourseIdea;
 import com.example.courses.model.CourseIdeaDAO;
+import com.example.courses.model.NotFoundException;
 import com.example.courses.model.SimpleCourseIdeaDAO;
 import spark.ModelAndView;
 
 import static spark.Spark.before;
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.halt;
 import static spark.Spark.post;
@@ -88,9 +90,17 @@ public class Main {
         get("/ideas/:slug", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             CourseIdea idea = dao.findBySlug(req.params("slug"));
-            model.put("voters", idea.getVoters());
+            model.put("idea", idea);
             return new ModelAndView(model, "idea-detail.hbs");
 
         }, new HandlebarsTemplateEngine());
+
+        exception(NotFoundException.class, (exc, req, res) -> {
+           res.status(404);
+           HandlebarsTemplateEngine engine = new HandlebarsTemplateEngine();
+           String html = engine.render(
+                   new ModelAndView(null, "not-found.hbs"));
+           res.body(html);
+        });
     }
 }
