@@ -1,6 +1,8 @@
 package com.example.giflib.Controller;
 
+import com.example.giflib.data.GifRepository;
 import com.example.giflib.model.Gif;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,8 @@ public class GifController {
 //        return "Gifs page";
 //    }
 
+    @Autowired  // Dependency Injection. Used to initialize a GifRepositiory object as soon as it's needed as long as the object has an @Component annotation. So we do not need to initialize the field
+    private GifRepository gifRepository;
 
     @RequestMapping(value = "/")    // routes to index page
     //@ResponseBody   // Indicates that string we return should be used as the response without any further processing (Not needed when using a template to process response such as thymeleaf
@@ -29,11 +33,21 @@ public class GifController {
         return "home";     // renders index.html
     }
 
-    @RequestMapping("/gif")
-    public String gifDetails(ModelMap modelMap) {
-        Gif gif = new Gif("compiler-bot", LocalDate.of(2015,2,13), "Adrian", true);
-        modelMap.put("gif", gif);   // adds object to model map for it to be available to the templating engine
 
-        return "gif-details";
-    }
+//    @RequestMapping("/gif")
+//    public String gifDetails(ModelMap modelMap) {
+//        Gif gif = new Gif("compiler-bot", LocalDate.of(2015,2,13), "Adrian", true);
+//        modelMap.put("gif", gif);   // adds object to model map for it to be available to the templating engine
+//
+//        return "gif-details";
+//    }
+
+
+@RequestMapping("/gif")
+public String gifDetails(ModelMap modelMap) {
+    Gif gif = gifRepository.findByName("android-explosion");
+    modelMap.put("gif", gif);   // adds object to model map for it to be available to the templating engine
+
+    return "gif-details";
+}
 }
