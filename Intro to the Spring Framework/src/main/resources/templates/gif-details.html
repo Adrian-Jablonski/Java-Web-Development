@@ -48,7 +48,7 @@
             <div class="col s12">
                 <!-- ${variable} syntax is used to access values from model map. Need to create getter method using standard name convention (getVarName) to be able to access an objects variables -->
                 <img th:src="@{'/gifs/' + ${gif.name} + '.gif'}" alt="gif" />
-                <a href="#" class="mark favorite"></a>
+                <a href="#" th:class="(${gif.favorite} ? 'un' : '') + 'mark favorite'"></a>
             </div>
         </div>
         <div class="row">
@@ -58,15 +58,16 @@
                         <img class="circle" src="http://api.adorable.io/avatars/205/avatar" alt="avatar" />
                     </div>
                     <div class="col s9">
-                        <h4>Craig Dennis</h4>
-                        <p>Uploaded on Oct 30 2015</p>
+                        <!-- th:text is used by thymeleaf to dynamically display text-->
+                        <h4 th:text="${gif.username}">Craig Dennis</h4>
+                        <p th:text="'Uploaded on ' + ${gif.dateUploaded}">Uploaded on Oct 30 2015</p>
                     </div>
                 </div>
             </div>
             <div class="col s12 l6">
                 <div class="share">
                     <a class="btn right" href="#">Copy</a>
-                    <span>URL</span>
+                    <span th:text="'http://gif.fy' + ${gif.name}">URL</span>
                 </div>
             </div>
         </div>
