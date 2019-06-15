@@ -1,10 +1,16 @@
+<!--Note: All tags need to be XML complient meaning the have to have closing tags or be self closing (<img> needs to be changed to <img/>)-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta charset="UTF-8"/>
+
+    <!--Prefixed href with th (thymeleaf namespace)-->
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+
+    <title>giflib | Home</title>
 </head>
 <body>
-$END$
+    <h1>Home</h1>
+    <img th:src="@{/gifs/compiler-bot.gif}"/>
 </body>
 </html>
