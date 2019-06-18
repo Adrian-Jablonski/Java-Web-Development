@@ -20,8 +20,8 @@ public class Application {
 
     public static void main(String[] args) {
         Contact contact = new ContactBuilder("Adrian", "Jablonski")
-        .withEmail("adrian@jab.com")
-        .withPhone(4445558899L)
+                .withEmail("adrian@jab.com")
+                .withPhone(4445558899L)
                 .build();
 
         System.out.println(contact);
