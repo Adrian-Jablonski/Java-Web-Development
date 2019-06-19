@@ -2,6 +2,7 @@ package com.example.contactmgr;
 
 import com.example.contactmgr.model.Contact;
 import com.example.contactmgr.model.Contact.ContactBuilder;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.service.ServiceRegistry;
@@ -10,7 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class Application {
     // Hold a reusable reference to a SessionFactory (Since we need only one)
-    //private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static final SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {
         // Create a StandardServiceRegistry
@@ -25,5 +26,22 @@ public class Application {
                 .build();
 
         System.out.println(contact);
+
+        // Open a session
+        Session session = sessionFactory.openSession();
+
+        // Begin a transaction
+        session.beginTransaction();
+
+        // Use the session to save the contact
+        session.save(contact);
+
+        // Commit the transaction
+        session.getTransaction().commit();
+
+        // Close session
+        session.close();
     }
+
+    
 }
