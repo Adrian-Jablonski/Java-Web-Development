@@ -2,11 +2,15 @@ package com.example.contactmgr;
 
 import com.example.contactmgr.model.Contact;
 import com.example.contactmgr.model.Contact.ContactBuilder;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
+import javax.persistence.criteria.CriteriaQuery;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+import java.util.List;
 
 
 public class Application {
@@ -26,7 +30,34 @@ public class Application {
                 .build();
 
         System.out.println(contact);
+        save(contact);
 
+        //Display list of contacts
+//        for (Contact c : fetchAllContacts()) {
+//            System.out.println(c);
+//        }
+        fetchAllContacts().stream().forEach(System.out::println);
+
+    }
+
+    private static List<Contact> fetchAllContacts() {
+        // Open a session
+        Session session = sessionFactory.openSession();
+
+        //Create Criteria
+        CriteriaQuery<Contact> criteriaQuery = session.getCriteriaBuilder().createQuery(Contact.class);
+        criteriaQuery.from(Contact.class);
+
+        // Get a list of Contact objects according to the Criteria object
+        List<Contact> contacts = session.createQuery(criteriaQuery).getResultList();
+
+        // Close session
+        session.close();
+
+        return contacts;
+    }
+
+    private static void save(Contact contact) {
         // Open a session
         Session session = sessionFactory.openSession();
 
@@ -42,6 +73,4 @@ public class Application {
         // Close session
         session.close();
     }
-
-    
 }
