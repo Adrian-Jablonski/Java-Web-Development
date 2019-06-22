@@ -13,4 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.sql2o/sql2o
+    compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
+
 }
